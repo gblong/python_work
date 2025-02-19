@@ -41,7 +41,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
     T = len(obs)
     N = len(states)
 
-    V = [[0] * N for _ in range(T)] # Viterbi表，存储到当前时刻的最高概率
+    V =         [[0] * N for _ in range(T)] # Viterbi表，存储到当前时刻的最高概率
     backtrack = [[0] * N for _ in range(T)] # 回溯表，存储最优路径的前一个状态，以便回溯找到最优路径
 
     # 初始化
