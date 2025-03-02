@@ -30,7 +30,48 @@ def knapsack(weights, values, capacity):
 
     return dp[n][capacity]
 
+def knapsack_opt(weights, values, capacity):
+    n = len(weights)
+    dp = [0] * (capacity + 1)
+    for i in range(n):
+        # dp[j]的状态依赖上一次迭代生成的j前面的状态，所以逆序遍历,直到背包的容量=weight[i]
+        for j in range(capacity, weights[i] - 1, -1):  
+            dp[j] = max(dp[j], dp[j - weights[i]] + values[i])
+    return dp[capacity]
+
+
 C = 5  # 背包容量
 weights = [2, 1, 3, 2]  # 物品重量
 values = [3, 2, 4, 2]   # 物品价值
 print(knapsack(weights, values, C))
+print(knapsack_opt(weights, values, C))
+
+#在i商品阶段，将背包的容量划分出w(i), w(i), w(i), ..., remainder ([1,2,3,..., w(i)-1])
+#类似多段图
+def knapsack_complete(weights, values, capacity):
+    n = len(weights)
+    dp = [0] * (capacity + 1)
+    for i in range(n):
+        for j in range(weights[i], capacity + 1):  # 正序遍历
+            dp[j] = max(dp[j], dp[j - weights[i]] + values[i])
+    return dp[capacity]
+
+
+#dp[j]的状态依赖上一次迭代生成的j前面的状态，所以逆序遍历,直到背包的容量=weight[i]
+#根据包含i商品的个数划分组合：必须包含1个i商品，必须包含2个i商品,...
+def knapsack_complete_my(weights, values, capacity):
+    n = len(weights)
+    dp = [0] * (capacity + 1)
+    for i in range(n):
+        for j in range(capacity, weights[i] - 1, -1):  
+            k = 1
+            while j - k * weights[i] >= 0:
+                dp[j] = max(dp[j], dp[j - k * weights[i]] + k * values[i])
+                k += 1
+    return dp[capacity]
+
+C = 5  # 背包容量
+weights = [1, 2, 3]  # 物品重量
+values = [6, 10, 12]  # 物品价值
+print(knapsack_complete(weights, values, C))
+print(knapsack_complete_my(weights, values, C))
